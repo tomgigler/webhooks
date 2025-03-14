@@ -1,0 +1,12 @@
+[Unit]
+Description=Flask Webhook Service
+After=network.target
+
+[Service]
+User=www-data
+WorkingDirectory=/var/www/webhooks
+ExecStart=/usr/bin/python3 /var/www/webhooks/webhook.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
