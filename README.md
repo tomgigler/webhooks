@@ -6,13 +6,13 @@ This repository manages a centralized webhook that listens for updates from mult
 ### **📂 Repository Structure**
 ```
 webhooks/
-│── deploy.sh               # Script to deploy the webhook
-│── webhook.py              # The Flask webhook server
 │── deploy-scripts/
 │   ├── repo1-deploy.sh     # Deploy script for repo1
 │   ├── repo2-deploy.sh     # Deploy script for repo2
-│── webhook.service         # Systemd service file
 │── README.md               # Documentation
+│── deploy.sh               # Script to deploy the webhook
+│── webhook.py              # The Flask webhook server
+│── webhook.service         # Systemd service file
 ```
 
 ---
