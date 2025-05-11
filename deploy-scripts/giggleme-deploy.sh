@@ -1,9 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
+source /var/www/webhooks/.env
+
+# Start SSH agent and add key
+eval "$(ssh-agent -s)"
+ssh-add $SSH_KEY_PATH
+
 LOGFILE="/var/www/html/giggletest/deploy-test.log"
 TEST_DIR="/var/www/html/giggletest"
-PROD_DIR="/var/www/html/giggleme"
+PROD_DIR="/var/www/html/GiggleMe"
 REPO_DIR="$TEST_DIR/.git"
 
 # Read GitHub webhook JSON payload from stdin
@@ -33,7 +39,9 @@ git pull origin "$branch" >> "$LOGFILE" 2>&1
 # Deploy to production if it's the main branch
 if [ "$branch" = "main" ]; then
   echo "$(date): Deploying to production at $PROD_DIR" >> "$LOGFILE"
-  rsync -a --delete "$TEST_DIR/" "$PROD_DIR/" >> "$LOGFILE" 2>&1
+
+  git archive --format=tar HEAD:web | tar -x -C /var/www/html/GiggleMe/
+
   echo "$(date): Production deploy complete." >> "$LOGFILE"
 else
   echo "$(date): Not main branch — production deploy skipped." >> "$LOGFILE"
