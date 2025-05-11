@@ -9,6 +9,7 @@ app = Flask(__name__)
 DEPLOY_SCRIPTS_DIR = os.path.abspath(os.path.dirname(__file__)) + "/deploy-scripts"
 REPO_DEPLOY_SCRIPTS = {
     "soccer": f"{DEPLOY_SCRIPTS_DIR}/soccer-deploy.sh",
+    "GiggleMe": f"{DEPLOY_SCRIPTS_DIR}/giggleme-deploy.sh",
     "pi": f"{DEPLOY_SCRIPTS_DIR}/pi-deploy.sh"
 }
 
@@ -23,7 +24,9 @@ def webhook():
             return jsonify({"error": "No deployment configured for this repo"}), 400
 
         script_path = REPO_DEPLOY_SCRIPTS[repo_name]
-        subprocess.run([script_path], check=True)
+        payload = request.get_data().decode('utf-8')
+        subprocess.run([script_path], input=payload, check=True, universal_newlines=True)
+
 
         return jsonify({"message": f"Deployment triggered for {repo_name}"}), 200
 
